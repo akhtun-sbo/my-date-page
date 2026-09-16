@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Will you go on a date with me? 💕</title>
+
+  <style>
+    :root {
+      --bg-color: #f7ebed;
+      --card-bg: #fff9fa;
+      --primary: #e65c7b;
+      --primary-hover: #d14968;
+      --text-color: #4a3b40;
+      --border-color: #e8d0d5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      min-height: 100vh;
+      padding: 20px;
+
+      overflow-x: hidden;
+    }
+
+    /* Main Card */
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+
+      padding: 35px 25px;
+
+      width: 100%;
+      max-width: 430px;
+
+      text-align: center;
+
+      box-shadow:
+        0 15px 35px rgba(230, 92, 123, 0.12);
+
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Image */
+
+    .avatar-img {
+      width: 90px;
+      height: 90px;
+
+      border-radius: 18px;
+
+      object-fit: cover;
+
+      margin-bottom: 18px;
+    }
+
+    /* Headings */
+
+    h2 {
+      font-size: 1.45rem;
+      line-height: 1.4;
+
+      margin-bottom: 20px;
+    }
+
+    .subtext {
+      font-size: 0.9rem;
+      color: #8a7379;
+
+      margin-bottom: 20px;
+    }
+
+    /* Steps */
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Buttons */
+
+    .btn {
+      background: var(--primary);
+
+      color: white;
+
+      border: none;
+
+      padding: 12px 26px;
+
+      border-radius: 22px;
+
+      font-size: 0.95rem;
+      font-weight: 600;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+
+      transform: translateY(-2px);
+    }
+
+    /* YES / NO area */
+
+    .btn-group {
+      position: relative;
+
+      height: 100px;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      gap: 20px;
+
+      margin-top: 20px;
+    }
+
+    .btn-yes {
+      position: relative;
+      z-index: 5;
+    }
+
+    .btn-no {
+      background: #c9b3b8;
+
+      position: absolute;
+
+      left: 58%;
+
+      top: 25px;
+
+      transition:
+        left 0.15s ease,
+        top 0.15s ease;
+    }
+
+    .btn-no:hover {
+      background: #c9b3b8;
+
+      transform: none;
+    }
+
+    /* Inputs */
+
+    .input-group {
+      text-align: left;
+
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      display: block;
+
+      font-size: 0.85rem;
+
+      font-weight: 600;
+
+      margin-bottom: 7px;
+
+      color: #6e585e;
+    }
+
+    input[type="date"],
+    select {
+      width: 100%;
+
+      padding: 12px 14px;
+
+      border: 1px solid var(--border-color);
+
+      border-radius: 12px;
+
+      background: white;
+
+      color: var(--text-color);
+
+      font-size: 0.95rem;
+
+      outline: none;
+    }
+
+    input[type="date"]:focus,
+    select:focus {
+      border-color: var(--primary);
+    }
+
+    /* Food Grid */
+
+    .food-grid {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 12px;
+
+      margin: 20px 0;
+    }
+
+    .food-card {
+      background: white;
+
+      border: 1px solid var(--border-color);
+
+      border-radius: 16px;
+
+      padding: 13px 7px;
+
+      cursor: pointer;
+
+      transition: 0.2s ease;
+    }
+
+    .food-card:hover {
+      border-color: var(--primary);
+
+      transform: scale(1.03);
+    }
+
+    .food-card.selected {
+      border: 2px solid var(--primary);
+
+      background: #fff1f4;
+
+      transform: scale(1.03);
+    }
+
+    .food-icon {
+      font-size: 1.8rem;
+
+      display: block;
+
+      margin-bottom: 5px;
+    }
+
+    .food-label {
+      font-size: 0.8rem;
+
+      font-weight: 600;
+    }
+
+    /* Confirmation */
+
+    .receipt-box {
+      background: white;
+
+      border: 1px solid var(--border-color);
+
+      border-radius: 16px;
+
+      padding: 16px;
+
+      margin: 20px 0;
+
+      text-align: left;
+    }
+
+    .receipt-row {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      padding: 9px 0;
+
+      border-bottom: 1px dashed #eadde0;
+    }
+
+    .receipt-row:last-child {
+      border-bottom: none;
+    }
+
+    .receipt-row span:first-child {
+      color: #8a7379;
+    }
+
+    .footer-note {
+      font-size: 0.75rem;
+
+      color: #ab959b;
+
+      margin-top: 16px;
+    }
+
+    /* Final heart */
+
+    .big-heart {
+      font-size: 4rem;
+
+      animation: heartbeat 1s infinite;
+    }
+
+    @keyframes heartbeat {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Mobile */
+
+    @media (max-width: 400px) {
+      .card {
+        padding: 28px 18px;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .food-grid {
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <div class="card">
+
+    <!-- ========================= -->
+    <!-- STEP 1 : PROPOSAL -->
+    <!-- ========================= -->
+
+    <div id="step-1" class="step active">
+
+      <img
+        src="my-photo.jpg"
+        class="avatar-img"
+        alt="My Photo"
+      />
+
+      <h2>
+        🌸 Will you go on a date with me? 🌸
+      </h2>
+
+      <div class="btn-group" id="btn-container">
+
+        <!-- YES BUTTON -->
+
+        <button
+          class="btn btn-yes"
+          onclick="nextStep(2)"
+        >
+          YES 💕
+        </button>
+
+        <!-- NO BUTTON -->
+
+        <button
+          class="btn btn-no"
+          id="no-btn"
+          type="button"
+        >
+          NO ✖
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- STEP 2 : SURPRISE -->
+    <!-- ========================= -->
+
+    <div id="step-2" class="step">
+
+      <div style="font-size: 3.5rem; margin-bottom: 10px;">
+        😭💕
+      </div>
+
+      <h2>
+        WAIT... YOU ACTUALLY SAID YES?? 😭
+      </h2>
+
+      <p class="subtext">
+        I was so ready for you to say no 🙈
+      </p>
+
+      <button
+        class="btn"
+        onclick="nextStep(3)"
+      >
+        Okay okay! →
+      </button>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- STEP 3 : DATE & TIME -->
+    <!-- ========================= -->
+
+    <div id="step-3" class="step">
+
+      <h2>
+        📅 So... when are you free?
+      </h2>
+
+      <div class="input-group">
+
+        <label>
+          Pick a Day 🗓️
+        </label>
+
+        <input
+          type="date"
+          id="date-select"
+        />
+
+      </div>
+
+
+      <div class="input-group">
+
+        <label>
+          What Time? ⏰
+        </label>
+
+        <select id="time-select">
+
+          <option value="">
+            Select a time...
+          </option>
+
+          <option value="12:00 PM">
+            12:00 PM
+          </option>
+
+          <option value="1:00 PM">
+            1:00 PM
+          </option>
+
+          <option value="6:00 PM">
+            6:00 PM
+          </option>
+
+          <option value="7:00 PM">
+            7:00 PM
+          </option>
+
+          <option value="8:00 PM">
+            8:00 PM
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <button
+        class="btn"
+        style="width:100%; margin-top:10px;"
+        onclick="checkDate()"
+      >
+        Set the date! ♥
+      </button>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- STEP 4 : FOOD -->
+    <!-- ========================= -->
+
+    <div id="step-4" class="step">
+
+      <h2>
+        What are we feeling? 🍽️✨
+      </h2>
+
+      <p class="subtext">
+        Pick your vibe
+      </p>
+
+
+      <div class="food-grid">
+
+        <div
+          class="food-card"
+          onclick="selectFood(this, 'Pizza')"
+        >
+          <span class="food-icon">🍕</span>
+          <span class="food-label">Pizza</span>
+        </div>
+
+
+        <div
+          class="food-card"
+          onclick="selectFood(this, 'Sushi')"
+        >
+          <span class="food-icon">🍣</span>
+          <span class="food-label">Sushi</span>
+        </div>
+
+
+        <div
+          class="food-card"
+          onclick="selectFood(this, 'Burgers')"
+        >
+          <span class="food-icon">🍔</span>
+          <span class="food-label">Burgers</span>
+        </div>
+
+
+        <div
+          class="food-card"
+          onclick="selectFood(this, 'Pasta')"
+        >
+          <span class="food-icon">🍝</span>
+          <span class="food-label">Pasta</span>
+        </div>
+
+
+        <div
+          class="food-card"
+          onclick="selectFood(this, 'Tacos')"
+        >
+          <span class="food-icon">🌮</span>
+          <span class="food-label">Tacos</span>
+        </div>
+
+
+        <div
+          class="food-card"
+          onclick="selectFood(this, 'Ramen')"
+        >
+          <span class="food-icon">🍜</span>
+          <span class="food-label">Ramen</span>
+        </div>
+
+      </div>
+
+
+      <button
+        class="btn"
+        style="width:100%;"
+        onclick="confirmFood()"
+      >
+        That's the one! 💕
+      </button>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- STEP 5 : CONFIRMATION -->
+    <!-- ========================= -->
+
+    <div id="step-5" class="step">
+
+      <div style="font-size: 3rem; margin-bottom: 10px;">
+        🥰
+      </div>
+
+      <h2>
+        It's a date! 💕
+      </h2>
+
+      <p class="subtext">
+        I can't wait to see you!
+      </p>
+
+
+      <div class="receipt-box">
+
+        <div class="receipt-row">
+
+          <span>
+            📅 Date
+          </span>
+
+          <strong id="final-date">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="receipt-row">
+
+          <span>
+            ⏰ Time
+          </span>
+
+          <strong id="final-time">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="receipt-row">
+
+          <span>
+            🍽️ Food
+          </span>
+
+          <strong id="final-food">
+            -
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="big-heart">
+        💖
+      </div>
+
+      <p class="footer-note">
+        Officially booked in my heart. 🫶
+      </p>
+
+
+      <button
+        class="btn"
+        style="margin-top:20px;"
+        onclick="location.reload()"
+      >
+        Start over 🔄
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- JAVASCRIPT -->
+  <!-- ========================= -->
+
+  <script>
+
+    /* -------------------------
+       DATA
+    ------------------------- */
+
+    let selectedFood = "";
+
+    let selectedDate = "";
+
+    let selectedTime = "";
+
+
+    /* -------------------------
+       NEXT STEP
+    ------------------------- */
+
+    function nextStep(stepNumber) {
+
+      // Hide all steps
+
+      document
+        .querySelectorAll(".step")
+        .forEach(function(step) {
+
+          step.classList.remove("active");
+
+        });
+
+
+      // Show selected step
+
+      const next = document.getElementById(
+        "step-" + stepNumber
+      );
+
+      next.classList.add("active");
+
+    }
+
+
+    /* -------------------------
+       NO BUTTON
+    ------------------------- */
+
+    const noBtn = document.getElementById("no-btn");
+
+    const container =
+      document.getElementById("btn-container");
+
+
+    function moveNoButton() {
+
+      const containerWidth =
+        container.clientWidth;
+
+      const containerHeight =
+        container.clientHeight;
+
+      const buttonWidth =
+        noBtn.offsetWidth;
+
+      const buttonHeight =
+        noBtn.offsetHeight;
+
+
+      // Keep button inside the area
+
+      const maxX =
+        containerWidth - buttonWidth;
+
+      const maxY =
+        containerHeight - buttonHeight;
+
+
+      // Random position
+
+      const randomX =
+        Math.random() * maxX;
+
+      const randomY =
+        Math.random() * maxY;
+
+
+      noBtn.style.left =
+        randomX + "px";
+
+      noBtn.style.top =
+        randomY + "px";
+
+    }
+
+
+    // Desktop
+
+    noBtn.addEventListener(
+      "mouseenter",
+      moveNoButton
+    );
+
+
+    // Mobile
+
+    noBtn.addEventListener(
+      "touchstart",
+      function(event) {
+
+        event.preventDefault();
+
+        moveNoButton();
+
+      }
+    );
+
+
+    // If somehow clicked
+
+    noBtn.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        moveNoButton();
+
+      }
+    );
+
+
+    /* -------------------------
+       DATE CHECK
+    ------------------------- */
+
+    function checkDate() {
+
+      const dateInput =
+        document.getElementById("date-select");
+
+      const timeInput =
+        document.getElementById("time-select");
+
+
+      selectedDate =
+        dateInput.value;
+
+      selectedTime =
+        timeInput.value;
+
+
+      if (selectedDate === "") {
+
+        alert("Please pick a date! 🥺");
+
+        return;
+
+      }
+
+
+      if (selectedTime === "") {
+
+        alert("Please pick a time! ⏰");
+
+        return;
+
+      }
+
+
+      // Go to food selection
+
+      nextStep(4);
+
+    }
+
+
+    /* -------------------------
+       FOOD SELECTION
+    ------------------------- */
+
+    function selectFood(element, food) {
+
+      // Remove old selection
+
+      document
+        .querySelectorAll(".food-card")
+        .forEach(function(card) {
+
+          card.classList.remove("selected");
+
+        });
+
+
+      // Select current card
+
+      element.classList.add("selected");
+
+
+      // Save food
+
+      selectedFood = food;
+
+    }
+
+
+    /* -------------------------
+       CONFIRM FOOD
+    ------------------------- */
+
+    function confirmFood() {
+
+      if (selectedFood === "") {
+
+        alert("Choose something to eat first! 🍕");
+
+        return;
+
+      }
+
+
+      // Format date
+
+      const dateObject =
+        new Date(selectedDate + "T00:00:00");
+
+
+      const formattedDate =
+        dateObject.toLocaleDateString(
+          "en-US",
+          {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+          }
+        );
+
+
+      // Put information on final page
+
+      document.getElementById(
+        "final-date"
+      ).textContent = formattedDate;
+
+
+      document.getElementById(
+        "final-time"
+      ).textContent = selectedTime;
+
+
+      document.getElementById(
+        "final-food"
+      ).textContent = selectedFood;
+
+
+      // Go to final step
+
+      nextStep(5);
+
+    }
+
+  </script>
+
+</body>
+
+</html>
